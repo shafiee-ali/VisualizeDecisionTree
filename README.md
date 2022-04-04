@@ -1,2 +1,21 @@
 # VisualizeDecisionTree
-This project give a dataset and create a visual decision tree classifier based on dataset.
+This project creates a visual **Decision Tree** based on a dataset.
+
+## Instalations
+
+To run this project, you must install the following packages:
+
+- pandas
+- numpy
+- pydot (for visualizing)
+
+install pandas:
+```
+pip install pandas
+```
+By installing Pandas, Numpy will also be installed in your system.
+
+install pydot:
+```
+pip install pydot
+```
