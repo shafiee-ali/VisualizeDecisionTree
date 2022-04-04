@@ -5,7 +5,6 @@ from math import log2
 import pydot
 import pandas as pd
 import numpy as np
-from PIL import Image
 import ntpath
 
 
@@ -123,7 +122,12 @@ def visual_tree(root, tree, depth=0):
 
 """ create Images dir for save visualizations """
 current_path = os.getcwd()
-images_dir = os.path.join(current_path, 'VisualizeDecisionTrees')
+results_dir = os.path.join(current_path, 'Results')
+is_exist = os.path.exists(results_dir)
+if not is_exist:
+    os.mkdir(results_dir)
+
+images_dir = os.path.join(results_dir, 'VisualizeDecisionTrees')
 is_exist = os.path.exists(images_dir)
 if not is_exist:
     os.mkdir(images_dir)
@@ -133,7 +137,9 @@ test_dir = os.path.join(current_path, 'DataSet/Test')
 
 
 for training_file in os.listdir(train_dir):
-    tarin = pd.read_csv(f'{train_dir}\\{training_file}')
+    train_file_address = f'{train_dir}\\{training_file}'
+    tarin = pd.read_csv(train_file_address)
+    train_file_name = training_file.split('.')[0]
     test = pd.read_csv('./DataSet/Test/monks_test.csv')
 
     target_class_name = tarin.columns[-1]
@@ -144,5 +150,5 @@ for training_file in os.listdir(train_dir):
     tree = pydot.Dot(graph_name="my_decision_tree", graph_type="graph", bgcolor="white")
     visual_tree(root, tree)
     tree.write("tree.dot")
-    tree.write_png(f'{images_dir}\\{training_file}_decision_tree.png')
+    tree.write_png(f'{images_dir}/{train_file_name}_decision_tree.png')
 
