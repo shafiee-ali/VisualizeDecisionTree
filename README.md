@@ -1,5 +1,6 @@
 # VisualizeDecisionTree
-This project creates a visual **Decision Tree** based on a dataset.
+This project creates a visual **Decision Tree** based on a dataset.<br/><br/>
+
 
 ## Instalations
 
@@ -19,3 +20,4 @@ install pydot:
 ```
 pip install pydot
 ```
+
