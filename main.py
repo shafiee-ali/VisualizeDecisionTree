@@ -1,6 +1,7 @@
 import os
 import random
 import string
+import time
 from math import log2
 import pydot
 import pandas as pd
@@ -20,7 +21,6 @@ class ID3:
     def __init__(self):
         self.root = None
 
-    @staticmethod
     def base_entropy(self, p):
         if p == 0:
             return 0
@@ -58,7 +58,6 @@ class ID3:
     def is_pure(self, dataset):
         return self.dataset_entropy(dataset) == 0
 
-    @staticmethod
     def remove_best_from_attributes(self, attrs, best):
         new_attrs = attrs.copy()
         new_attrs.remove(best)
@@ -98,20 +97,45 @@ class ID3:
                     common_label = np.argmax(counts)
                     dummy.predict = common_label
                 else:
-                    child = self.fit(sub_dataset, new_attributes)
+                    child = self.id3(sub_dataset, new_attributes)
                     dummy.children.append(child)
                 root.children.append(dummy)
         return root
 
-    @staticmethod
-    def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    def id_generator(self, size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))
+
+    def classify(self, sample, root):
+        if root.is_leaf == True:
+            return root.predict
+        if root.is_feature == True:
+            child = [child for child in root.children if child.value == sample[root.value]]
+            if child != []:
+                try:
+                    return self.classify(sample, child[0])
+                except:
+                    pass
+            else:
+                results = []
+                for child in root.children:
+                    results.append(self.classify(sample, child))
+                counts = np.bincount(results)
+                common_label = np.argmax(counts)
+                return common_label
+        else:
+            return self.classify(sample, root.children[0])
+
+    def predict(self, samples):
+        predictions = []
+        for _, v in samples.iterrows():
+            predictions.append(self.classify(v, self.root))
+        return predictions
 
     def export_graphviz(self, tree_name = "my_decision_tree" ,back_color="white"):
         tree = pydot.Dot(graph_name=tree_name, graph_type="graph", bgcolor=back_color)
         self.visual_tree(self.root, tree)
         self.tree = tree
-        return tree
+        return self.tree
 
     def visual_tree(self, root, tree, depth=0):
         if root.is_leaf:
@@ -132,6 +156,18 @@ class ID3:
             tree.add_edge(pydot.Edge(node.get_name(), child_node.get_name(), color='blue'))
         return node
 
+    def accuracy(self, classified_as, true_class):
+        if len(true_class) != len(classified_as):
+            raise Exception("The length of both arrays must be equal")
+        length = len(true_class)
+        trues = 0
+        for classified, true in zip(classified_as, true_class):
+            if classified == true:
+                trues += 1
+        return (trues/length)*100
+
+
+
 
 
 """ create Images dir for save visualizations """
@@ -150,8 +186,8 @@ train_dir = os.path.join(current_path, 'DataSet/Train')
 test_dir = os.path.join(current_path, 'DataSet/Test')
 
 
-decision_tree = ID3()
 for training_file in os.listdir(train_dir):
+    decision_tree = ID3()
     train_file_address = f'{train_dir}\\{training_file}'
     tarin = pd.read_csv(train_file_address)
     train_file_name = training_file.split('.')[0]
@@ -162,6 +198,12 @@ for training_file in os.listdir(train_dir):
     decision_tree.fit(tarin, attributes)
     dot_tree = decision_tree.export_graphviz()
     dot_tree.write_png(f'{images_dir}/{train_file_name}_decision_tree.png')
+    classified_as = decision_tree.predict(test)
+    true_class = test[target_class_name]
+    true_class = list(true_class)
+    print(decision_tree.accuracy(classified_as, true_class))
+    print(record_length)
+    time.sleep(1)
 
 
 
