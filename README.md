@@ -30,5 +30,5 @@ After running the program, a **Result** directory is created in its current dire
   
 - **Accuracy**: Evaluates the test dataset using the decision tree constructed with each training set and stores the accuracy in a [csv](https://en.wikipedia.org/wiki/Comma-separated_values) file.
     <br/>example:<br/>
-  <br/>![alt text](/Results/Accuray/test_dataset_accuracy.csv)
+  <br/>![alt text](/Results/Accuray/CSVExampleForReadMe.png)
   
