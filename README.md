@@ -21,3 +21,8 @@ install pydot:
 pip install pydot
 ```
 
+## Usage
+
+After running the program, a **Result** directory is created in its current directory and two directories are created within the result:
+- **VisualizeDecisionTree**: In this dir, for each tutorial, the decision tree is saved as an image using the [pydot](https://github.com/pydot/pydot) package.
+- **Accuracy**: Evaluates the test dataset using the decision tree constructed with each training set and stores the accuracy in a [csv](https://en.wikipedia.org/wiki/Comma-separated_values) file.
