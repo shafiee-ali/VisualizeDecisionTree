@@ -45,8 +45,3 @@ for training_file in os.listdir(train_dir):
 
 df = pd.DataFrame(result_accuracy, columns=['dataset', 'accuracy'])
 df.to_csv(f"{accuracy_dir}\\test_dataset_accuracy.csv")
-
-
-
-
-
