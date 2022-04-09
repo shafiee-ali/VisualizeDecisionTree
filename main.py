@@ -41,7 +41,7 @@ for training_file in os.listdir(train_dir):
     true_class = test[target_class_name]
     true_class = list(true_class)
     acc = decision_tree.accuracy(classified_as, true_class)
-    result_accuracy.append([train_file_name, str(acc)])
+    result_accuracy.append([train_file_name, str(round(acc, 2))])
 
 df = pd.DataFrame(result_accuracy, columns=['dataset', 'accuracy'])
 df.to_csv(f"{accuracy_dir}\\test_dataset_accuracy.csv")
