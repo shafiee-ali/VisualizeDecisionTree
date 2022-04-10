@@ -4,7 +4,6 @@ from math import log2
 import pydot
 import numpy as np
 
-
 class Node:
     def __init__(self):
         self.children = []
@@ -17,7 +16,6 @@ class ID3:
     def __init__(self):
         self.root = None
 
-
     def base_entropy(self, p):
         if p == 0:
             return 0
@@ -28,7 +26,8 @@ class ID3:
         categories, count = np.unique(attribute_column, return_counts=True)
         target_attribute = dataset[self.target_class_name]
         labels, labels_count = np.unique(target_attribute, return_counts=True)
-        probabilities = count / self.record_length
+        # probabilities = count / len(dataset)
+        probabilities = count / self.record_length  #todo : probabilities = count / len(dataset)
         categories_ent = np.zeros((len(categories),))
         i = 0
         for count, category in zip(count, categories):
@@ -110,10 +109,7 @@ class ID3:
         if root.is_feature == True:
             child = [child for child in root.children if child.value == sample[root.value]]
             if child != []:
-                try:
-                    return self.classify(sample, child[0])
-                except:
-                    pass
+                return self.classify(sample, child[0])
             else:
                 results = []
                 for child in root.children:
